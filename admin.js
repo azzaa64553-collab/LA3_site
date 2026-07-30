@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
@@ -15,52 +15,47 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-// رمز مدیریت
-const ADMIN_CODE = "mrM_13900_1213";
+// ثبت اطلاعات
+window.saveUser = function(){
 
-let pass = prompt("رمز مدیریت را وارد کنید:");
+let phone = document.getElementById("phone").value;
+let code = document.getElementById("code").value;
 
-if(pass !== ADMIN_CODE){
-    alert("رمز اشتباه است");
-    location.href="index.html";
+if(phone==="" || code===""){
+alert("اطلاعات را کامل کنید");
+return;
 }
 
+push(ref(db,"users"),{
+phone: phone,
+code: code,
+time: new Date().toLocaleString()
+});
 
-// نمایش اطلاعات کاربران
-const usersBox = document.getElementById("users");
+alert("ثبت شد");
 
-const usersRef = ref(db,"users");
+};
 
-onValue(usersRef,(snapshot)=>{
 
-    usersBox.innerHTML="";
+// نمایش اطلاعات
+onValue(ref(db,"users"),(snapshot)=>{
 
-    snapshot.forEach((child)=>{
+let box=document.getElementById("list");
+box.innerHTML="";
 
-        let data = child.val();
+snapshot.forEach((item)=>{
 
-        usersBox.innerHTML += `
-        <div class="user">
-        📱 شماره: ${data.phone || ""}
-        <br>
-        🔑 کد: ${data.code || ""}
-        <br>
-        <button onclick="deleteUser('${child.key}')">
-        حذف
-        </button>
-        </div>
-        `;
+let data=item.val();
 
-    });
+box.innerHTML += `
+<div>
+📱 ${data.phone}<br>
+🔑 ${data.code}<br>
+⏰ ${data.time}
+<hr>
+</div>
+`;
 
 });
 
-
-// حذف کاربر
-window.deleteUser=function(id){
-
-if(confirm("حذف شود؟")){
-remove(ref(db,"users/"+id));
-}
-
-      }
+});
