@@ -12,7 +12,6 @@ body{
     background:#000;
     color:white;
     font-family:tahoma;
-    text-align:center;
 }
 
 .box{
@@ -22,20 +21,23 @@ body{
     padding:25px;
     border:2px solid #00ff66;
     border-radius:20px;
-    box-shadow:0 0 20px #00ff66;
+    box-shadow:0 0 25px #00ff66;
+    text-align:center;
 }
 
 h1{
     color:#00ff66;
+    font-size:35px;
 }
 
 input{
     width:90%;
     padding:15px;
-    margin:10px;
-    border-radius:10px;
+    margin:12px 0;
+    border-radius:12px;
     border:none;
-    font-size:16px;
+    font-size:18px;
+    text-align:center;
 }
 
 button{
@@ -43,15 +45,21 @@ button{
     padding:15px;
     margin-top:15px;
     background:#00ff66;
+    color:black;
     border:none;
-    border-radius:10px;
-    font-size:18px;
+    border-radius:12px;
+    font-size:20px;
     font-weight:bold;
 }
 
-#msg{
-    margin-top:20px;
+.page{
+    display:none;
+}
+
+.msg{
     color:#00ff66;
+    margin-top:20px;
+    font-size:18px;
 }
 </style>
 
@@ -61,35 +69,85 @@ button{
 
 <div class="box">
 
+<div id="page1">
+
 <h1>ثبت شماره</h1>
 
 <input id="phone" placeholder="شماره موبایل">
 
+<button onclick="nextPage()">ادامه</button>
+
+</div>
+
+
+
+<div id="page2" class="page">
+
+<h1>تأیید کد</h1>
+
+<p>کدی که دریافت کردید را وارد کنید</p>
+
 <input id="code" placeholder="کد">
 
-<button onclick="save()">ثبت اطلاعات</button>
+<button onclick="finish()">تأیید</button>
 
-<div id="msg"></div>
+</div>
+
+
+
+<div id="page3" class="page">
+
+<h1>موفق شد ✅</h1>
+
+<p class="msg">
+اطلاعات شما ثبت شد
+</p>
+
+</div>
+
 
 </div>
 
 
 <script>
 
-function save(){
+let phone="";
 
-let phone=document.getElementById("phone").value;
-let code=document.getElementById("code").value;
+
+function nextPage(){
+
+phone=document.getElementById("phone").value;
 
 if(phone==""){
-document.getElementById("msg").innerHTML="شماره را وارد کنید";
+alert("شماره را وارد کنید");
 return;
 }
 
-document.getElementById("msg").innerHTML=
-"اطلاعات ثبت شد ✅";
+document.getElementById("page1").style.display="none";
+document.getElementById("page2").style.display="block";
 
-console.log(phone,code);
+}
+
+
+
+function finish(){
+
+let code=document.getElementById("code").value;
+
+if(code==""){
+alert("کد را وارد کنید");
+return;
+}
+
+
+document.getElementById("page2").style.display="none";
+document.getElementById("page3").style.display="block";
+
+
+console.log({
+شماره:phone,
+کد:code
+});
 
 }
 
