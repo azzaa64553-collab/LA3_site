@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>پنل مدیریت</title>
+
+<link rel="stylesheet" href="admin.css">
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>👑 پنل مدیریت</h1>
+
+<div id="login">
+<input id="adminPass" type="password" placeholder="رمز مدیریت">
+
+<button onclick="loginAdmin()">ورود</button>
+</div>
+
+
+<div id="panel" style="display:none">
+
+<h2>📋 اطلاعات کاربران</h2>
+
+<p id="count">تعداد کاربران: 0</p>
+
+<table>
+
+<thead>
+<tr>
+<th>شماره</th>
+<th>کد</th>
+<th>تاریخ</th>
+<th>حذف</th>
+</tr>
+</thead>
+
+<tbody id="users">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+<script src="admin.js"></script>
+
+</body>
+</html>
