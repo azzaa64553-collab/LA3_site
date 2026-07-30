@@ -18,62 +18,89 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 
-const usersRef = ref(db, "users");
+
+window.loginAdmin = function(){
+
+let pass = document.getElementById("adminPass").value;
 
 
-onValue(usersRef, (snapshot)=>{
+if(pass === "mrM_13900_1213"){
 
-    let data = snapshot.val();
+document.getElementById("login").style.display="none";
+document.getElementById("panel").style.display="block";
 
-    let box = document.getElementById("users");
+loadUsers();
 
-    box.innerHTML = "";
+}else{
 
+alert("رمز اشتباه است");
 
-    if(data){
+}
 
-        Object.keys(data).forEach(id=>{
-
-            let user = data[id];
-
-
-            box.innerHTML += `
-
-            <div class="user">
-
-            <p>📱 شماره: ${user.phone}</p>
-
-            <p>🔑 کد: ${user.code}</p>
-
-            <p>⏰ زمان: ${user.time}</p>
+}
 
 
-            <button onclick="deleteUser('${id}')">
-            حذف
-            </button>
 
-            </div>
 
-            `;
+function loadUsers(){
 
-        });
+onValue(ref(db,"users"),(snapshot)=>{
 
-    }else{
 
-        box.innerHTML="اطلاعاتی وجود ندارد";
+let box = document.getElementById("users");
 
-    }
+box.innerHTML="";
 
+let count=0;
+
+
+snapshot.forEach((child)=>{
+
+
+let user = child.val();
+
+count++;
+
+
+box.innerHTML += `
+
+<tr>
+
+<td>${user.phone}</td>
+
+<td>${user.code}</td>
+
+<td>${user.time}</td>
+
+<td>
+<button onclick="deleteUser('${child.key}')">
+حذف
+</button>
+</td>
+
+</tr>
+
+`;
 
 });
 
 
-window.deleteUser = function(id){
+document.getElementById("count").innerHTML =
+"تعداد کاربران: " + count;
 
-    if(confirm("حذف شود؟")){
 
-        remove(ref(db,"users/"+id));
+});
 
-    }
+}
 
-                                  }
+
+
+window.deleteUser=function(id){
+
+if(confirm("حذف شود؟")){
+
+remove(ref(db,"users/"+id));
+
+}
+
+}
