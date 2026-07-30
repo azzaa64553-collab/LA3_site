@@ -1,76 +1,66 @@
-const adminPassword = "mrM_13900_1213";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
+  authDomain: "la3nazr.firebaseapp.com",
+  databaseURL: "https://la3nazr-default-rtdb.firebaseio.com",
+  projectId: "la3nazr",
+  storageBucket: "la3nazr.firebasestorage.app",
+  messagingSenderId: "819824551752",
+  appId: "1:819824551752:web:87e8a2555c6df97edeb57d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 
-function loginAdmin(){
+// رمز مدیریت
+const ADMIN_CODE = "mrM_13900_1213";
 
-let pass = document.getElementById("adminPass").value;
+let pass = prompt("رمز مدیریت را وارد کنید:");
 
-
-if(pass === adminPassword){
-
-document.getElementById("login").style.display="none";
-document.getElementById("panel").style.display="block";
-
-loadUsers();
-
-
-}else{
-
-alert("رمز اشتباه است");
-
+if(pass !== ADMIN_CODE){
+    alert("رمز اشتباه است");
+    location.href="index.html";
 }
 
-}
 
+// نمایش اطلاعات کاربران
+const usersBox = document.getElementById("users");
 
+const usersRef = ref(db,"users");
 
-// فعلاً اطلاعات نمونه
-// بعد از وصل Firebase این بخش واقعی می‌شود
+onValue(usersRef,(snapshot)=>{
 
-function loadUsers(){
+    usersBox.innerHTML="";
 
-let users = [
-{
-phone:"09123456789",
-code:"12345",
-date:"امروز"
-}
-];
+    snapshot.forEach((child)=>{
 
+        let data = child.val();
 
-let table = document.getElementById("users");
+        usersBox.innerHTML += `
+        <div class="user">
+        📱 شماره: ${data.phone || ""}
+        <br>
+        🔑 کد: ${data.code || ""}
+        <br>
+        <button onclick="deleteUser('${child.key}')">
+        حذف
+        </button>
+        </div>
+        `;
 
-table.innerHTML="";
-
-
-users.forEach(user=>{
-
-
-let row = document.createElement("tr");
-
-
-row.innerHTML=`
-
-<td>${user.phone}</td>
-<td>${user.code}</td>
-<td>${user.date}</td>
-<td>
-<button class="delete-btn">
-حذف
-</button>
-</td>
-
-`;
-
-
-table.appendChild(row);
-
+    });
 
 });
 
 
-document.getElementById("count").innerHTML =
-"تعداد کاربران: " + users.length;
+// حذف کاربر
+window.deleteUser=function(id){
 
-
+if(confirm("حذف شود؟")){
+remove(ref(db,"users/"+id));
 }
+
+      }
