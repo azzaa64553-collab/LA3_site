@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LA3 Admin Panel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+    margin:0;
+    background:#050505;
+    color:white;
+    font-family:tahoma, sans-serif;
+    text-align:center;
+}
+
+.box{
+    width:85%;
+    max-width:400px;
+    margin:40px auto;
+    padding:25px;
+    background:#111;
+    border:2px solid #008cff;
+    border-radius:20px;
+    box-shadow:0 0 20px #008cff;
+}
+
+h2{
+    color:#00aaff;
+}
+
+input,button{
+
+    width:90%;
+    padding:14px;
+    margin:10px;
+    border-radius:12px;
+    border:none;
+    font-size:18px;
+
+}
+
+
+button{
+
+    background:#008cff;
+    color:white;
+}
+
+
+button:hover{
+
+    opacity:0.8;
+
+}
+
+
+.delete{
+
+    background:red;
+
+}
+
+
+#location{
+
+    line-height:2;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box" id="loginBox">
+
+<h2>LA3 ADMIN</h2>
+
+<input id="password"
+type="password"
+placeholder="رمز ورود">
+
+
+<button onclick="login()">
+ورود
+</button>
+
+
+</div>
+
+
+
+<div class="box" id="panel" style="display:none">
+
+
+<h2>آخرین موقعیت</h2>
+
+
+<p id="location">
+در حال دریافت...
+</p>
+
+
+<button onclick="openMap()">
+مشاهده در Google Maps
+</button>
+
+
+<button class="delete" onclick="deleteLocation()">
+حذف موقعیت
+</button>
+
+
+</div>
+
+
+
+<script>
+
+
+const SUPABASE_URL =
+"https://cwagmwearaiurgmggyxd.supabase.co";
+
+
+const SUPABASE_KEY =
+"sb_publishable_b1ga-fKeGD2NxCAp8mmF8Q_x9R4_az9";
+
+
+const db =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+
+let lastLocation = null;
+
+
+
+function login(){
+
+
+let pass =
+document.getElementById("password").value;
+
+
+if(pass === "m12131213"){
+
+
+document.getElementById("loginBox")
+.style.display="none";
+
+
+document.getElementById("panel")
+.style.display="block";
+
+
+loadLocation();
+
+
+}
+
+}
+
+
+
+async function loadLocation(){
+
+
+let {data,error}=await db
+.from("locations")
+.select("*")
+.order("id",{ascending:false})
+.limit(1);
+
+
+
+if(data && data.length){
+
+
+lastLocation=data[0];
+
+
+document.getElementById("location")
+.innerHTML =
+
+"Latitude: "
++ lastLocation.latitude
++
+"<br>Longitude: "
++ lastLocation.longitude
++
+"<br>Accuracy: "
++ lastLocation.accuracy
++" متر";
+
+
+}
+else{
+
+
+document.getElementById("location")
+.innerHTML=
+"موقعیتی وجود ندارد";
+
+
+}
+
+
+}
+
+
+
+
+function openMap(){
+
+
+if(lastLocation){
+
+
+window.open(
+"https://maps.google.com/?q="
++
+lastLocation.latitude
++
+","
++
+lastLocation.longitude
+);
+
+
+}
+
+
+}
+
+
+
+
+async function deleteLocation(){
+
+
+if(lastLocation){
+
+
+await db
+.from("locations")
+.delete()
+.eq("id",lastLocation.id);
+
+
+
+document.getElementById("location")
+.innerHTML=
+"موقعیت حذف شد";
+
+
+lastLocation=null;
+
+
+}
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>
